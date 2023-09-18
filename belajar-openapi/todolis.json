@@ -1,0 +1,349 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Todolist RESTful API",
+        "version": "1",
+        "description": "OpenAPI for Todolist RESTful API",
+        "termsOfService": "https://vinijumatulfitri.com",
+        "contact": {
+            "name": "Vini Jumatul Fitri",
+            "email": "vinijumatul@gmail.com",
+            "url": "https://vinijumatulfitri.com"
+        },
+        "license": {
+            "name": "APACHE 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+        }
+    },
+    "servers": [
+        {
+            "description": "Todolist RESTful API Server",
+            "url": "https://{environment}.vinijuamtul/api/v1",
+            "variables": {
+                "environment":{
+                    "description": "Server environment",
+                    "default": "dev",
+                    "enum": [
+                        "dev",
+                        "qa",
+                        "prod"
+                    ]
+                }
+            }
+        }
+    ],
+    "externalDocs": {
+        "description": "Contoh deskripsi Saja",
+        "url": "https://conotohexternal.com"
+    },
+    "paths": {
+        "/todolist" : {
+            "get":{
+                "summary": "Get All Todolist",
+                "tags": ["Todolist"],
+                "description": "Get all active todolist by default",
+                "parameters": [
+                    {
+                        "name": "include done",
+                        "in": "query",
+                        "required": false,
+                        "description": "is include done todolist",
+                        "schema":{
+                            "type": "boolean",
+                            "default": false,
+                            "nullable": true
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter todolist by name",
+                        "schema" : {
+                            "type": "string",
+                            "nullable": true,
+                            "minLength": 1,
+                            "maxLength": 100
+                        },
+                        "examples" :{
+                            "java":{
+                                "description": "Example Name Java",
+                                "value": "java"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Success get all todolis",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                   "$ref": "#/components/schemas/ArrayTodoList"
+                                },
+                               "example":{
+                                "success" : {
+                                    "description": "Example success get all todolis",
+                                    "value":[
+                                        {
+                                            "id": "1",
+                                            "name": "Java",
+                                            "priority": 3,
+                                            "tags": ["Java", "Programming"]
+                                        },
+                                        {
+                                            "id": "2",
+                                            "name": "PHP",
+                                            "priority": 5,
+                                            "tags": ["PHP", "Programming"]
+                                        }
+                                
+                                    ]
+                                }
+                               }
+                            }
+                        }
+                    }
+                }
+            },
+            "post":{
+                "summary": "Create new Todolist",
+                "tags": ["Todolist"],
+                "security": [
+                    {
+                        "TodolistAuth":[]
+                    }
+                ],
+                "description": "Create new todolist in database",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                              "$ref": "#/components/schemas/CreateOrUpdateTodolist"
+                            },
+                            "examples":{
+                                "java":{
+                                    "description": "Exmpale create todolis java",
+                                    "value":{
+                                        "name": "Java",
+                                        "priority": 3,
+                                        "tags": [
+                                            "Java",
+                                            "Programming"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "Succes create todolis",
+                        "content": {
+                            "application/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "$ref": "#/components/schemas/Todolist"
+                                    }
+                                 },
+                                 "examples":{
+                                    "java":{
+                                        "description": "Exmpale create todolis java",
+                                        "value":{
+                                            "id":"1",
+                                            "name": "Java",
+                                            "priority": 3,
+                                            "tags": [
+                                                "Java",
+                                                "Programming"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/todolist/{todolistid}" :{
+            "put":{
+                "summary": "Update existing Todolist",
+                "description": "Update existing Todolist in database",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "required": true
+                                    },
+                                    "priority": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "default": 1,
+                                        "required": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                       "$ref": "#/components/parameters/Todolistid"
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Succes update todolis",
+                        "content": {
+                            "application/json":{
+                                "schema": {
+                                   "$ref": "#/components/schemas/Todolist"
+                                 },
+                                 "examples":{
+                                    "java":{
+                                        "description": "Exmpale update todolis java",
+                                        "value":{
+                                            "id":"1",
+                                            "name": "Java",
+                                            "priority": 3,
+                                            "tags": [
+                                                "Java",
+                                                "Programming"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete":{
+                "summary": "Delete existing Todolist",
+                "description": "Delete existing Todolist in database",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/Todolistid"
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Success dlete todolist",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "success":{
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success":{
+                                        "description": "Succes delete todolist",
+                                        "value": {
+                                            "success": true
+                                        }
+                                    }
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "TodolistAuth": {
+                "type": "apiKey",
+                "description": "Authentication for Todolist Restful API",
+                "in": "header",
+                "name": "X-API-Key"
+            }
+        },
+        "parameters": {
+            "Todolistid" :{
+                "name": "todolist id",
+                "in": "path",
+                "required": true,
+                "description": "Todolist id for update",
+                "schema":{
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                },
+                "examples": {
+                    "java":{
+                        "description": "Sample todolist id for Java",
+                        "value":1
+                    }
+                }
+                
+            }
+        },
+        "schemas": {
+            "Todolist":{
+                "type": "object",
+                "properties": {
+                    "id":{
+                        "type": "string"
+                    },
+                    "name":{
+                        "type": "string"
+                    },
+                    "priority":{
+                        "type": "number",
+                        "format": "int32"
+                    },
+                    "tags":{
+                        "type": "array",
+                        "items":{
+                            "type": "string"
+                        }
+                    }
+                }  
+            },
+            "CreateOrUpdateTodolist":{
+                "type": "object",
+                "properties": {
+                    "name":{
+                        "type": "string"
+                    },
+                    "priority":{
+                        "type": "number",
+                        "format": "int32"
+                    },
+                    "tags":{
+                        "type": "array",
+                        "items":{
+                            "type": "string"
+                        }
+                    }
+                }  
+            },
+            "ArrayTodoList":{
+                "type": "array",
+                "items":{
+                    "type": "object",
+                    "properties": {
+                        "$ref": "#/components/schemas/Todolist"
+                    }  
+                }
+               
+            }
+        }
+    }
+}
