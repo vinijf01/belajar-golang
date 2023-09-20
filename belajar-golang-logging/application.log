@@ -1,0 +1,6 @@
+time="2023-09-20T09:11:10+07:00" level=info msg="This is Info"
+time="2023-09-20T09:11:10+07:00" level=warning msg="This is Warn"
+time="2023-09-20T09:11:10+07:00" level=error msg="This is Error"
+time="2023-09-20T09:11:35+07:00" level=info msg="This is Info"
+time="2023-09-20T09:11:35+07:00" level=warning msg="This is Warn"
+time="2023-09-20T09:11:35+07:00" level=error msg="This is Error"
